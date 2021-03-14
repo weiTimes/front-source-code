@@ -4,12 +4,15 @@ const Yreact = {
   createElement,
   createTextElement,
   render,
+  useState,
 };
 
 let nextUnitOfWork = null; // 下一个工作单元
 let wipRoot = null; // workInProgressRoot 正在工作的 fiber tree => 追踪 root fiber tree
 let currentRoot = null; // 保存着最后一次 commit 到 dom 的 root fiber tree
 let deletions = null;
+let wipFiber = null;
+let hookIndex = null;
 
 const element = Yreact.createElement(
   'div',
@@ -96,6 +99,47 @@ function commitWork(fiber) {
 }
 
 /**
+ * useState hook 实现
+ *
+ *
+ * @param {*} initValue
+ */
+function useState(initValue) {
+  const oldHook =
+    wipFiber.alternate &&
+    wipFiber.alternate.hooks &&
+    wipFiber.alternate.hooks[hookIndex];
+
+  const hook = {
+    state: oldHook ? oldHook.state : initValue,
+    queue: [],
+  };
+
+  const actions = oldHook ? oldHook.queue : [];
+  actions.forEach((action) => {
+    hook.state = action(hook.state);
+  });
+
+  const setState = (action) => {
+    hook.queue.push(action);
+
+    wipRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    };
+
+    nextUnitOfWork = wipRoot;
+    deletions = [];
+  };
+
+  wipFiber.hooks.push(hook);
+  hookIndex++;
+
+  return [hook.state, setState];
+}
+
+/**
  * 对于函数式组件，删除的时候需要一直找到有 dom 的那个 fiber
  *
  * @param {*} fiber
@@ -148,6 +192,10 @@ function performUnitOfWork(fiber) {
 }
 
 function updateFuncitonComponent(fiber) {
+  wipFiber = fiber;
+  hookIndex = 0;
+  wipFiber.hooks = [];
+
   const children = [fiber.type(fiber.props)];
 
   reconcileChildren(fiber, children);
