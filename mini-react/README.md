@@ -1,5 +1,7 @@
 ## react 源码
 
+> 结合[文档](https://blog.ywhoo.cn/docs/framework/react-mini#第-0-步)阅读效果更好🚀
+
 ![学习react源码的几个阶段](https://ypyun.ywhoo.cn/assets/20210307230501.png)
 
 学习react源码的几个阶段:
