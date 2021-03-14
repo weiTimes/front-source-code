@@ -71,20 +71,42 @@ function commitRoot() {
 function commitWork(fiber) {
   if (!fiber) return;
 
-  const domParent = fiber.parent.dom;
+  let domParentFiber = fiber.parent;
+
+  // 如果没有父fiber，一直找到 root fiber
+  // 函数式组件没有 dom，需要一直找到 root fiber
+  while (!domParentFiber) {
+    domParentFiber = domParentFiber.parent;
+  }
+
+  const domParent = domParentFiber.dom;
 
   if (fiber.effectTag === 'PLACEMENT' && fiber.dom !== null) {
     // 插入新 dom
     domParent.appendChild(fiber.dom);
   } else if (fiber.effectTag === 'DELECTION') {
     // 删除 dom
-    domParent.removeChild(fiber.dom);
+    commitDelection(fiber, domParent);
   } else if (fiber.effectTag === 'UPDATE' && fiber.dom !== null) {
     updateDom(fiber.dom, fiber.alternate.props, fiber.props);
   }
 
   commitWork(fiber.child);
   commitWork(fiber.sibling);
+}
+
+/**
+ * 对于函数式组件，删除的时候需要一直找到有 dom 的那个 fiber
+ *
+ * @param {*} fiber
+ * @param {*} domParent
+ */
+function commitDelection(fiber, domParent) {
+  if (fiber.dom) {
+    domParent.removeChild(fiber.dom);
+  } else {
+    commitDelection(fiber.child, domParent);
+  }
 }
 
 /**
@@ -95,20 +117,19 @@ function commitWork(fiber) {
  * @param {*} nextOfWork
  */
 function performUnitOfWork(fiber) {
-  // 为元素创建 dom，然后添加到父节点的 dom 中
-  if (!fiber.dom) {
-    fiber.dom = createDom(fiber);
+  const isFunctionComponent = fiber.type instanceof Function;
+
+  if (isFunctionComponent) {
+    // 是函数式组件
+    updateFuncitonComponent(fiber);
+  } else {
+    updateHostComponent(fiber);
   }
 
   // 浏览器会打断这个工作，所以将手动的 dom 操作移除，当所有工作完成后才插入 dom
   // if (fiber.parent) {
   //   fiber.parent.dom.appendChild(fiber.dom);
   // }
-
-  const elements = fiber.props.children;
-
-  // 协调旧的 fiber 和新的 elements
-  reconcileChildren(fiber, elements);
 
   // 返回下一个工作单元
   if (fiber.child) {
@@ -124,6 +145,22 @@ function performUnitOfWork(fiber) {
 
     nextFiber = nextFiber.parent;
   }
+}
+
+function updateFuncitonComponent(fiber) {
+  const children = [fiber.type(fiber.props)];
+
+  reconcileChildren(fiber, children);
+}
+function updateHostComponent(fiber) {
+  // 为元素创建 dom，然后添加到父节点的 dom 中
+  if (!fiber.dom) {
+    fiber.dom = createDom(fiber);
+  }
+  const elements = fiber.props.children;
+
+  // 协调旧的 fiber 和新的 elements
+  reconcileChildren(fiber, elements);
 }
 
 /**
