@@ -6,7 +6,8 @@ const Yreact = {
   render,
 };
 
-let nextUnitOfWork = null;
+let nextUnitOfWork = null; // 下一个工作单元
+let wipRoot = null; // workInProgressRoot => 追踪 root fiber tree
 
 const element = Yreact.createElement(
   'div',
@@ -30,7 +31,39 @@ function workLoop(deadline) {
     shouldYield = deadline.timeRemaining() < 1;
   }
 
+  // 如果没有下一个工作单元，说明已经完成整个 fiber tree 的创建
+  // 将整个 fiber 提交到 dom
+  if (!nextUnitOfWork && wipRoot) {
+    commitRoot();
+  }
+
   requestIdleCallback(workLoop);
+}
+
+/**
+ * 处理 wipRoot
+ *
+ */
+function commitRoot() {
+  // 递归地将所有节点插入到 dom 中
+  commitWork(wipRoot.child);
+  // 完成工作后将 wipRoot 置为 null
+  wipRoot = null;
+}
+
+/**
+ * 递归将子节点，子节点的兄弟节点插入到 dom
+ *
+ * @param {*} fiber
+ * @returns
+ */
+function commitWork(fiber) {
+  if (!fiber) return;
+
+  const domParent = fiber.parent.dom;
+  domParent.appendChild(fiber.dom);
+  commitWork(fiber.child);
+  commitWork(fiber.sibling);
 }
 
 /**
@@ -45,9 +78,11 @@ function performUnitOfWork(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
-  if (fiber.parent) {
-    fiber.parent.dom.appendChild(fiber.dom);
-  }
+
+  // 浏览器会打断这个工作，所以将手动的 dom 操作移除
+  // if (fiber.parent) {
+  //   fiber.parent.dom.appendChild(fiber.dom);
+  // }
 
   const elements = fiber.props.children;
   let index = 0;
@@ -100,12 +135,14 @@ function performUnitOfWork(fiber) {
  */
 function render(element, container) {
   // 将 root fiber 赋值给下一个工作单元
-  nextUnitOfWork = {
+  wipRoot = {
     dom: container,
     props: {
       children: [element],
     },
   };
+
+  nextUnitOfWork = wipRoot;
 }
 
 function createDom(fiber) {
