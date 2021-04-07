@@ -1,13 +1,19 @@
-const array = [1, 2, 3, [3, 3, 3, [5, 4, 5, 6, 6, 7, 8]], [333, 4444]];
-
-function arrayReduce(array) {
-  return array.reduce((pre, cur) => {
-    if (Array.isArray(cur)) {
-      return [...pre, ...arrayReduce(cur)];
-    } else {
-      return [...pre, cur];
-    }
-  }, []);
+function foo() {
+  var myName = '极客时间';
+  let test1 = 1;
+  const test2 = 2;
+  var innerBar = {
+    setName: function (newName) {
+      myName = newName;
+    },
+    getName: function () {
+      console.log(test1);
+      return myName;
+    },
+  };
+  return innerBar;
 }
-
-console.log(arrayReduce(array));
+var bar = foo();
+bar.setName('极客邦');
+bar.getName();
+console.log(bar.getName());

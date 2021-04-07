@@ -2,7 +2,7 @@
  * @Author: yewei
  * @Date: 2021-03-22 18:03:47
  * @Last Modified by: yewei
- * @Last Modified time: 2021-03-24 23:48:51
+ * @Last Modified time: 2021-03-25 22:53:19
  *
  * 设计一种请求池，支持传入最大并发数：
  *
@@ -134,6 +134,7 @@ function multiRequest(urls, maxNum) {
   });
 }
 
+// 测试用例
 multiRequest(
   [
     // 'https://v1.alapi.cn/api/mryw',
@@ -154,7 +155,7 @@ multiRequest(
 ).then((res) => {
   const logs = res.map((r) => r.data);
 
-  console.log(res, 'res-请发请求，带并发数-promise');
+  // console.log(res, 'res-请发请求，带并发数-promise');
 });
 
 // --- 页面上有一个输入框，两个按钮，A按钮和B按钮，点击A或者B分别会发送一个异步请求，请求完成后，结果会显示在输入框中。
@@ -296,36 +297,52 @@ function sendRequest(urls, max, callback) {
   }
 }
 
-sendRequest(
-  ['http://localhost:3000/api/hello', 'http://localhost:3000/api/info'],
-  3,
-  (res) => {
-    console.log(res, '我是并发数为3，请求完拿到结果的回调');
-  }
-);
+// 测试用例
+// sendRequest(
+//   ['http://localhost:3000/api/hello', 'http://localhost:3000/api/info'],
+//   3,
+//   (res) => {
+//     console.log(res, '我是并发数为3，请求完拿到结果的回调');
+//   }
+// );
 
-// --- 当达到并发数时同时发起请求
+// --- 设计一个并发请求池
 function createRequest({ pool = 2 }) {
-  const queue = [];
+  const queue = []; // 并发池
+  const waitQueue = []; // 等待队列，并发池满的情况下，放入等待队列
   const result = [];
   let index = 0;
 
   console.log('创建请求池');
 
-  function request(url) {
-    index++;
-    queue.push(url);
+  // 将请求推入请求池
+  function setTask(url) {
+    if (!url) return;
 
-    if (index === pool) {
-      // 达到并发数
-      index = 0;
-      const reqs = queue.splice(0, pool); // 取出将要并发的请求
+    const task = fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log('当前并发数', queue.length);
 
-      reqs.forEach((url, urlIndex) => {
-        fetch(url).then((res) => {
-          result[urlIndex + result.length] = res;
-        });
+        result[index++] = res;
+        queue.splice(queue.indexOf(task), 1);
+
+        if (waitQueue.length > 0) {
+          setTask(waitQueue.shift());
+        } else {
+          console.log(result, 'res');
+        }
       });
+
+    queue.push(task);
+  }
+
+  function request(url) {
+    if (queue.length < pool) {
+      // 推入并发池
+      setTask(url);
+    } else {
+      waitQueue.push(url);
     }
   }
 
@@ -333,5 +350,5 @@ function createRequest({ pool = 2 }) {
 }
 
 // --- 测试用例
-// const request = createRequest({ pool: 3 }); // 创建并发数为 3 的请求池
-// new Array(10).fill(1).forEach(() => request('http://localhost:3000/api/hello'));
+const request = createRequest({ pool: 3 }); // 创建并发数为 3 的请求池
+new Array(10).fill(1).forEach(() => request('http://localhost:3000/api/hello'));
