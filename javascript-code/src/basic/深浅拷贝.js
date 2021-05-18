@@ -2,7 +2,7 @@
  * @Author: yewei
  * @Date: 2021-04-06 21:12:30
  * @Last Modified by: yewei
- * @Last Modified time: 2021-04-07 14:44:15
+ * @Last Modified time: 2021-05-09 23:53:12
  *
  * 深浅拷贝
  */
@@ -30,7 +30,7 @@ if (!Object.assign2) {
         if (source) {
           for (let key in source) {
             if (Object.prototype.hasOwnProperty.call(source, key)) {
-              o[key] = source[key];
+              to[key] = source[key];
             }
           }
         }

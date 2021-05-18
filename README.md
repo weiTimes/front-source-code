@@ -18,7 +18,7 @@
 
 - [mini-react](./mini-react)
 - [javascript-code](./javascript-code)
-- [玩转 webpack](./webpack)
+- [玩转 webpack](./play-webpack)
 
 ## TODO
 
