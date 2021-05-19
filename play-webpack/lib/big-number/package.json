@@ -1,6 +1,6 @@
 {
   "name": "yw-big-number",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "yw-大整数加法",
   "main": "main.js",
   "license": "MIT",

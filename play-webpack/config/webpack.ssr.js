@@ -1,18 +1,27 @@
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const common = require('./webpack.common');
 
 module.exports = merge(common, {
   mode: 'production', // production
-  stats: 'errors-only',
+  entry: {
+    app: path.join(__dirname, '../src/app.jsx'),
+  },
+  // experiments: {
+  //   outputModule: true,
+  // },
   output: {
-    filename: '[name]_[chunkhash:8].bundle.js',
+    filename: '[name]-server.js',
     path: path.resolve(__dirname, '../', 'dist'),
-    publicPath: './',
     clean: true,
+    // globalObject: 'this',
+    library: {
+      type: 'umd',
+    },
   },
   module: {
     rules: [
@@ -76,18 +85,22 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: '[name]_[contenthash:8].css',
     }),
+    // new HtmlWebpackPlugin({
+    //   chunks: ['app'],
+    //   template: path.join(__dirname, '../', 'public/app.ejs'),
+    // }),
   ],
   optimization: {
     minimize: true,
     minimizer: [new CssMinimizerPlugin(), '...'],
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /(react|react-dom)/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
+    // splitChunks: {
+    //   cacheGroups: {
+    //     commons: {
+    //       test: /(react|react-dom)/,
+    //       name: 'vendors',
+    //       chunks: 'all',
+    //     },
+    //   },
+    // },
   },
 });

@@ -9,7 +9,7 @@ import './index.less';
 import ICON_GIRL from './images/girl.jpg';
 
 const App = () => {
-  const num = bigNumber('999', '1');
+  const num = bigNumber('99922', '1');
 
   function handleClick() {
     console.log('clicked...');

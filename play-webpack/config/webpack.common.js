@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const glob = require('glob');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 // 设置多页打包，思路是使用 glob 解析出对应的入口文件，然后设置对应的 entry 和 HtmlWebpackPlugin
 function setMpa() {
@@ -62,5 +63,6 @@ module.exports = {
       chunks: ['main'],
       template: path.join(__dirname, '../', 'public/index.ejs'),
     }),
+    new FriendlyErrorsWebpackPlugin(),
   ],
 };
