@@ -2,7 +2,7 @@
 
 > 前端小宇宙，是我个人在学习过程中的记录，分为多个专题，有的专题是较为完整的项目，有的是手写题的聚集地，包含 js 手写和算法实现，有的是某个方向由浅入深的实践代码，主旨是为了通过实践提升编码能力。
 
-> 由于更多的是实战代码，有的专题会有文档，对照着看可以帮助理解，文档放在了我的博客中，移步[这里查看](https://blog.ywhoo.cn/)，当然子项目中也会提到文档的具体地址。
+> 由于更多的是实战代码，有的专题会有文档，对照着看可以帮助理解，文档放在了我的博客中，移步[这里查看](https://blog.ywhoo.cn/)，当然子项目中也会提到对应文档的具体地址。
 
 > 持续更新中。
 
@@ -24,6 +24,7 @@
 
 - [mini-react](./mini-react) - 手写一个 mini react
 - [react-ssr](./react-ssr) - react SSR 同构架构的实现
-- [javascript-code](./javascript-code) - javascript 手写代码
+- [javascript-code](./javascript-code) - javascript 手写代码题
 - [玩转 webpack](./play-webpack) - webpack 从入门到进阶
 - [algorithms](./algorithms) - 算法题，使用 javascript 实现，一题多解
+- [typescript-battle](./typescript-battle) - Typescript 之英雄的战役
