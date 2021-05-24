@@ -7,4 +7,4 @@ import './style.css';
 // import './src/basic/深浅拷贝';
 // import './test';
 // import './src/topics/查找dom中包含img标签的dom';
-import './src/topics/随机生成一段json';
+// import './src/topics/随机生成一段json';

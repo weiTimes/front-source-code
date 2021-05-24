@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import bigNumber from 'yw-big-number';
 
+import 'babel-polyfill';
 import './hello';
 import './index.less';
 // import { sayName } from './utils';

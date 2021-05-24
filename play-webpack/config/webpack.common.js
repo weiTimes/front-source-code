@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const glob = require('glob');
+const webpack = require('webpack');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 // 设置多页打包，思路是使用 glob 解析出对应的入口文件，然后设置对应的 entry 和 HtmlWebpackPlugin
@@ -34,6 +35,10 @@ function setMpa() {
 const { entry, htmlWebpackPlugins } = setMpa();
 
 module.exports = {
+  cache: {
+    type: 'filesystem',
+    // cacheDirectory: path.resolve(__dirname, '.temp_cache'),
+  },
   target: 'web',
   entry: {
     ...entry,
@@ -49,7 +54,16 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        use: ['babel-loader', 'eslint-loader'],
+        use: [
+          // {
+          //   loader: 'thread-loader',
+          //   options: {
+          //     workder: 3,
+          //   },
+          // },
+          'babel-loader',
+          'eslint-loader',
+        ],
       },
       {
         resourceQuery: /raw/,
@@ -64,5 +78,11 @@ module.exports = {
       template: path.join(__dirname, '../', 'public/index.ejs'),
     }),
     new FriendlyErrorsWebpackPlugin(),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('../build/library/library.json'),
+      scope: 'xyz',
+      sourceType: 'commonjs2',
+    }),
   ],
 };
