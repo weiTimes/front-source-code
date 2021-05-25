@@ -1,3 +1,31 @@
+const flat = (array, deep) => {
+  let i = 0;
+  let newArray = array;
+  let res = [];
+
+  while (i < deep) {
+    let curArray = [];
+
+    for (let j = 0; j < newArray.length; j++) {
+      if (Array.isArray(array[j])) {
+        curArray = curArray.concat(newArray[j]);
+      } else {
+        res.push(newArray[j]);
+      }
+    }
+
+    newArray = curArray;
+
+    i++;
+  }
+
+  return res;
+};
+
+const array = [1, [2, [3, [4, [5, [6]]]]]];
+
+console.log(flat(array, 6));
+
 // const toString = Object.prototype.toString;
 
 // function isFunction(obj) {
