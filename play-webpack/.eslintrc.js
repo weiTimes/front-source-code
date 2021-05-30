@@ -14,5 +14,9 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
     'no-restricted-globals': 'off',
+    'class-methods-use-this': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'no-restricted-syntax': 'off',
+    'function-paren-newline': 'off',
   },
 };

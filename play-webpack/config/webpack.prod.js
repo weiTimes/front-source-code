@@ -4,7 +4,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+// const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 // const PurgeCSSPlugin = require('purgecss-webpack-plugin');
 // const glob = require('glob');
 const webpack = require('webpack');
@@ -84,11 +84,11 @@ const config = merge(common, {
     new MiniCssExtractPlugin({
       filename: '[name]_[contenthash:8].css',
     }),
-    new ImageMinimizerPlugin({
-      minimizerOptions: {
-        plugins: [['jpegtran', { progressive: true }]],
-      },
-    }),
+    // new ImageMinimizerPlugin({
+    //   minimizerOptions: {
+    //     plugins: [['jpegtran', { progressive: true }]],
+    //   },
+    // }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
     // }),

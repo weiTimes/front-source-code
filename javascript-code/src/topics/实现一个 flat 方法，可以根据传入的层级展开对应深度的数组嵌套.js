@@ -2,7 +2,7 @@
  * @Author: yewei
  * @Date: 2021-05-25 11:56:36
  * @Last Modified by: yewei
- * @Last Modified time: 2021-05-25 13:41:28
+ * @Last Modified time: 2021-05-26 13:00:50
  *
  * 实现一个 flat 方法，可以根据传入的层级展开对应深度的数组嵌套
  */
@@ -15,42 +15,41 @@
  * @param {*} deep
  * @returns
  */
-// const flat = (array, deep) => {
-//   let i = 0;
-//   let newArray = array;
-//   let res = [];
+const flat = (array, deep) => {
+  if (deep <= 0) return array;
 
-//   while (i < deep) {
-//     let curArray = [];
+  let i = 0;
+  let res = [].concat(array); // copy 数组
 
-//     for (let j = 0; j < newArray.length; j++) {
-//       if (Array.isArray(array[j])) {
-//         curArray = curArray.concat(newArray[j]);
-//       } else {
-//         res.push(newArray[j]);
-//       }
-//     }
+  console.log(...res); // [1, 2, [3, 4, [5]]] -> 1, 2, [3, 4, [5]]
 
-//     newArray = curArray;
+  while (i < deep) {
+    res = [].concat(...res);
 
-//     i++;
-//   }
+    i++;
+  }
 
-//   return res;
-// };
+  return res;
+};
 
-// const flatRecursive = (array, deep) => {
-//   return array.reduce((prev, cur) => {
-//     const isRecursive = Array.isArray(cur) && deep > 0;
+/**
+ * 使用 reduce 实现
+ * @param {*} array
+ * @param {*} deep
+ * @returns
+ */
+const flatRecursive = (array, deep) => {
+  if (deep <= 0) return array;
 
-//     const ele = isRecursive ? flatRecursive(cur, deep - 1) : cur;
+  return array.reduce((prev, cur) => {
+    const isRecursive = Array.isArray(cur);
 
-//     return [...prev, ele];
-//   }, []);
-// };
+    const ele = isRecursive ? flatRecursive(cur, deep - 1) : cur;
 
-const array = [1, [2, [3, [4, [5, [6]]]]]];
+    return prev.concat(ele);
+  }, []);
+};
 
-array.flat(2);
+const array = [1, 2, [3, 4, [5, 6, [7, 8]]]];
 
-console.log(array); // [1, 2, 3]
+console.log(flatRecursive(array, 1), 'h'); // [1, 2, 3]

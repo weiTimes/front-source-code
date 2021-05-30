@@ -29,8 +29,13 @@ class LinkList {
   constructor() {
     this.head = null; // 头节点
     this.tail = null; // 尾节点
+    this.size = 0;
 
     this.compare = new Comparator();
+  }
+
+  size() {
+    return this.size;
   }
 
   prepend(value) {
@@ -102,5 +107,7 @@ linkList.append('xiang');
 linkList.append('jun');
 linkList.append('hong');
 linkList.delete('jun');
+console.log(linkList);
+
 // linkList.append('yetao');
 // linkList.append('xiang');
