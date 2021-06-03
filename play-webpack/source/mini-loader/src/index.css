@@ -1,0 +1,7 @@
+body {
+  background: url('./images/girl.jpg?__sprite');
+}
+
+.banner {
+  background: url('./images/glasses.jpg?__sprite');
+}

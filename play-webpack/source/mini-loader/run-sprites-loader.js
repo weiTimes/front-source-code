@@ -4,11 +4,10 @@ const fs = require('fs');
 
 runLoaders(
   {
-    resource: path.join(__dirname, './src/info.txt'),
+    resource: path.join(__dirname, './src/index.css'),
     loaders: [
       {
-        loader: path.join(__dirname, './loaders/raw-loader.js'),
-        options: { name: 'ywhoo' },
+        loader: path.join(__dirname, './loaders/sprites-loader.js'),
       },
     ],
     context: { minimize: true },
