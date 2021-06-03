@@ -20,8 +20,7 @@
     "analyze:stats": "webpack --config config/webpack.prod.js --json stats.json"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
+    "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
     "babel-eslint": "^10.1.0",
@@ -46,8 +45,11 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "@babel/core": "^7.14.3",
     "autoprefixer": "^10.2.5",
     "babel-polyfill": "^6.26.0",
+    "babel-traverse": "^6.26.0",
+    "babylon": "^6.18.0",
     "css-minimizer-webpack-plugin": "^2.0.0",
     "express": "^4.17.1",
     "friendly-errors-webpack-plugin": "^1.7.0",

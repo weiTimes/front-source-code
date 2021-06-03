@@ -18,5 +18,6 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'no-restricted-syntax': 'off',
     'function-paren-newline': 'off',
+    'no-new': 'off',
   },
 };
