@@ -21,5 +21,8 @@ module.exports = {
     'no-new': 'off',
     'max-len': 'off',
     'prefer-arrow-callback': 'off',
+    'func-names': 'off',
+    'no-param-reassign': 'off',
+    'arrow-body-style': 'off',
   },
 };
