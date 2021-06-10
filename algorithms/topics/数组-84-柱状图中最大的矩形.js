@@ -1,32 +1,39 @@
 /**
  *  解法一
  * 暴力1
+ * 依次遍历柱形的高度，对于每一个高度分别向两边扩散，求出以当前高度为矩形的最大宽度多少。
  * @param {*} heights
  */
 var largestRectangleArea = function (heights) {
-  if (heights.length === 1) return heights[0];
+  const len = heights.length;
 
-  var max = 0;
+  if (len === 0) return 0;
+  if (len === 1) return heights[0];
 
-  for (var i = 0; i < heights.length - 1; i++) {
-    max = Math.max(max, heights[i]);
+  let max = 0;
 
-    for (var j = i + 1; j < heights.length; j++) {
-      max = Math.max(max, heights[j]);
+  // 遍历每一项，向左，向右一直扩散，直到高度严格小于当前项停止
+  for (let i = 0; i < len; i++) {
+    const cur = heights[i];
 
-      var minHeight = heights[j];
+    let left = i;
+    let right = i;
 
-      for (var k = i; k <= j; k++) {
-        minHeight = Math.min(minHeight, heights[k]);
-      }
-
-      max = Math.max(max, (j - i + 1) * minHeight);
+    // 左右指针不能超出索引范围
+    while (left > 0 && heights[left - 1] >= cur) {
+      left--;
     }
+
+    while (right < len - 1 && heights[right + 1] >= cur) {
+      right++;
+    }
+
+    const area = (right - left + 1) * cur;
+    max = Math.max(max, area);
   }
 
   return max;
 };
-
 /**
  *  解法二
  *  暴力2
@@ -37,22 +44,31 @@ var largestRectangleArea = function (heights) {
  * @param {*} heights
  */
 var largestRectangleArea = function (heights) {
-  var left;
-  var right;
-  var max = 0;
+  const len = heights.length;
 
-  for (var i = 0; i < heights.length; i++) {
-    left = i;
-    right = i;
+  if (len === 0) return 0;
+  if (len === 1) return heights[0];
 
-    while (left > 0 && heights[left - 1] >= heights[i]) {
+  let max = 0;
+
+  // 遍历每一项，向左，向右一直扩散，直到高度严格小于当前项停止
+  for (let i = 0; i < len; i++) {
+    const cur = heights[i];
+
+    let left = i;
+    let right = i;
+
+    // 左右指针不能超出索引范围
+    while (left - 1 >= 0 && heights[left - 1] >= cur) {
       left--;
     }
-    while (right < heights.length && heights[right + 1] >= heights[i]) {
+
+    while (right + 1 <= len - 1 && heights[right + 1] >= cur) {
       right++;
     }
 
-    max = Math.max(max, (right - left + 1) * heights[i]);
+    const area = (right - left + 1) * cur;
+    max = Math.max(max, area);
   }
 
   return max;
@@ -60,51 +76,45 @@ var largestRectangleArea = function (heights) {
 
 /**
  *  解法三
- *  栈
+ *  单调栈（递增） + 哨兵
+ *  看到元素的高度严格小于栈顶的高度时，出栈，计算面积，否则入栈
  * @param {*} heights
  */
 var largestRectangleArea = function (heights) {
-  if (heights.length === 0) return 0;
-  if (heights.length === 1) return heights[0];
+  let len = heights.length;
 
-  var stack = [{ index: -1, value: -1 }];
-  var max = 0;
+  if (len === 0) return 0;
+  if (len === 1) return heights[0];
 
-  function getLast() {
-    return stack[stack.length - 1];
-  }
+  // 前后加入哨兵，可以保证栈不为空
+  const newHeight = [0, ...heights, 0];
+  len = newHeight.length;
 
-  for (var i = 0; i < heights.length; i++) {
-    while (stack.length !== 1 && heights[i] < getLast().value) {
-      var popItem = stack.pop();
+  let area = 0;
 
-      while (stack.length !== 1 && getLast().value === popItem.value) {
-        stack.pop();
-      }
+  const peek = () => stack[stack.length - 1];
+  const stack = [0];
 
-      var widthOffset = i - getLast().index - 1;
-      max = Math.max(max, widthOffset * popItem.value);
+  // 遍历数组，下标从 1 开始
+  for (let i = 1; i < len; i++) {
+    const curHeight = newHeight[i];
+
+    // 当前元素 < 栈顶元素 -> 出栈 -> 确认面积
+    while (curHeight < newHeight[peek()]) {
+      // 先出栈
+      const topIndex = stack.pop();
+      // 最后栈顶元素为哨兵元素，下标为0，即元素最左可以到达0，最右边是当前遍历到的最后一个元素下标
+      const width = i - peek() - 1;
+      area = Math.max(area, width * newHeight[topIndex]);
     }
 
-    stack.push({ index: i, value: heights[i] });
+    stack.push(i);
   }
 
-  var last = getLast();
-
-  while (stack.length > 1) {
-    var currentPop = stack.pop();
-
-    while (stack.length > 0 && currentPop.value === getLast().value) {
-      stack.pop();
-    }
-
-    var curWidth = last.index - getLast().index;
-
-    max = Math.max(max, curWidth * currentPop.value);
-  }
-
-  return max;
+  return area;
 };
 
-const result = largestRectangleArea([0, 9]);
+const result = largestRectangleArea([2, 1, 2]);
+// const result = largestRectangleArea([2, 1, 5, 6, 2, 3]);
+// const result = largestRectangleArea([1, 1]);
 console.log(result, 'res');

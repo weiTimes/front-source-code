@@ -2,7 +2,7 @@
  * @Author: yewei
  * @Date: 2021-03-22 18:03:47
  * @Last Modified by: yewei
- * @Last Modified time: 2021-03-25 22:53:19
+ * @Last Modified time: 2021-06-04 14:04:07
  *
  * 设计一种请求池，支持传入最大并发数：
  *
@@ -87,7 +87,7 @@ function proiseAll(promises) {
 //   })
 //   .catch((e) => console.log(e));
 
-// --- 可以控制并发数，最多有 maxNum 个请求，但是请求是一个个发的
+// --- 可以控制并发数，最多有 maxNum 个请求，先达到最大并发数，然后发完一个接着发下一个
 function multiRequest(urls, maxNum) {
   if (!maxNum) return;
 

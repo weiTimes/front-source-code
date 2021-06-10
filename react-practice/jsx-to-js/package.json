@@ -1,0 +1,12 @@
+{
+  "name": "jsx-to-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "babel": "babel hello.jsx"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
