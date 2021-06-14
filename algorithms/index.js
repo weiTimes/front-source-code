@@ -1,3 +1,3 @@
 // import './data-structures/linked-list/LinkedList';
-import './topics/求两个数组的交集和并集，不能有重复数字';
+import './topics/写一个flatten函数，输入input，返回';
 import './test';
