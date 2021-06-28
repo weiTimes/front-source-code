@@ -1,3 +1,12 @@
+/*
+ * @Author: yewei
+ * @Date: 2021-06-25 22:07:13
+ * @Last Modified by: yewei
+ * @Last Modified time: 2021-06-26 23:19:24
+ *
+ * 大堆的实现
+ */
+
 class Heap {
   n = 0; // 堆中元素的数量
 
@@ -87,9 +96,7 @@ class Heap {
     let parent = 0;
 
     // 如果还存在父节点，下标从 0 开始，0 没有父节点
-    while (i > 0) {
-      parent = (i - 1) >> 1; // 父节点索引
-
+    while (i > 0 && (parent = (i - 1) >> 1) !== i) {
       if (this.a[parent] < temp) {
         // 将父节点向下移动，更新 i 的位置
         this.a[i] = this.a[parent];

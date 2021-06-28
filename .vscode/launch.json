@@ -8,7 +8,7 @@
       "name": "opera 源码",
       "request": "launch",
       "type": "pwa-chrome",
-      "url": "http://localhost:3001",
+      "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
     },
     {
