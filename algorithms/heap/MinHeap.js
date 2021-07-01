@@ -1,13 +1,3 @@
-/*
- * @Author: yewei
- * @Date: 2021-06-27 20:54:41
- * @Last Modified by: yewei
- * @Last Modified time: 2021-06-28 09:38:20
- *
- * 小堆的实现
- * 最小堆的第一个节点时最小节点
- */
-
 class MinHeap {
   constructor(k) {
     this.a = new Array(k);
@@ -18,78 +8,99 @@ class MinHeap {
     return this.n;
   }
 
+  /**
+   * 如果 aVal < bVal 说明 aVal 的值更小
+   * 在上浮过程中， aVal 往上游
+   *
+   * @param {*} aVal
+   * @param {*} bVal
+   * @memberof MinHeap
+   */
+  isLessPriority(aVal, bVal) {
+    if (!aVal || !bVal) return false;
+
+    return aVal[1] < bVal[1] || (aVal[1] === bVal[1] && aVal[0] > bVal[0]);
+  }
+
   push(val) {
-    this.a[this.n] = val;
+    this.a[this.n++] = val;
 
-    this.swim(this.n);
-
-    this.n += 1;
+    this.swim(this.n - 1);
   }
 
   pop() {
     const ret = this.a[0];
 
-    this.a[0] = this.a[this.n - 1];
+    this.a[0] = this.a[--this.n];
 
     this.sink(0);
-
-    this.n -= 1;
 
     return ret;
   }
 
   swim(i) {
-    const temp = this.a[i];
-    let parent = 0;
+    while (i > 0) {
+      const parentIndex = (i - 1) >> 1;
+      const parentVal = this.a[parentIndex];
+      const temp = this.a[i];
 
-    while (i > 0 && (parent = (i - 1) >> 1) !== i) {
-      if (this.a[parent][1] > temp[1]) {
-        this.a[i] = this.a[parent];
-        i = parent;
+      if (this.isLessPriority(temp, parentVal)) {
+        this.a[i] = parentVal;
+        this.a[parentIndex] = temp;
+
+        i = parentIndex;
       } else {
         break;
       }
     }
-
-    this.a[i] = temp;
   }
 
   sink(i) {
-    const temp = this.a[i];
+    while (i < this.n) {
+      const leftChildIndex = (i << 1) + 1;
+      const rightChildIndex = (i << 1) + 2;
+      const leftVal = this.a[leftChildIndex];
+      const rightVal = this.a[rightChildIndex];
+      const temp = this.a[i];
 
-    let j = 0;
+      let smallerIndex = leftChildIndex; // 更小值的节点索引
 
-    while ((j = (i << 1) + 1) < this.n) {
-      if (j + 1 < this.n && this.a[j + 1][1] < this.a[j][1]) {
-        j = j + 1;
+      if (rightChildIndex < this.n) {
+        // 有右边节点，并且更小
+        if (this.isLessPriority(rightVal, leftVal)) {
+          smallerIndex = rightChildIndex;
+        }
       }
 
-      if (this.a[j][1] < temp[1]) {
-        this.a[i] = this.a[j];
-        i = j;
+      // 子节点比要下沉的节点更小，交换位置
+      if (
+        smallerIndex < this.n &&
+        this.isLessPriority(this.a[smallerIndex], temp)
+      ) {
+        this.a[i] = this.a[smallerIndex];
+        this.a[smallerIndex] = temp;
+
+        i = smallerIndex;
       } else {
         break;
       }
     }
-
-    this.a[i] = temp;
   }
 }
 
-var topKFrequent = function (nums, k) {
-  if (!nums || k <= 0) return [];
+var topKFrequent = function (words, k) {
+  if (!words || k <= 0) return [];
 
-  let len = nums.length;
-
-  const heap = new MinHeap(k + 1);
   const map = new Map();
 
-  for (let i = 0; i < len; i++) {
-    const count = map.has(nums[i]) ? map.get(nums[i]) : 0;
-    map.set(nums[i], count + 1);
+  for (let word of words) {
+    const count = map.has(word) ? map.get(word) : 0;
+    map.set(word, count + 1);
   }
 
-  for (const item of map) {
+  const heap = new MinHeap(k + 1);
+
+  for (let item of map.entries()) {
     heap.push(item);
 
     if (heap.n > k) {
@@ -97,9 +108,11 @@ var topKFrequent = function (nums, k) {
     }
   }
 
-  return heap.a.map((item) => item[0]).slice(0, k);
+  const res = [];
+
+  while (heap.n > 0 && res.length < k) {
+    res.push(heap.pop()[0]);
+  }
+
+  return res.reverse();
 };
-
-const res = topKFrequent([4, 1, -1, 2, -1, 2, 3], 2);
-
-console.log(res, 'res');
