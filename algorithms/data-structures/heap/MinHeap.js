@@ -87,32 +87,3 @@ class MinHeap {
     }
   }
 }
-
-var topKFrequent = function (words, k) {
-  if (!words || k <= 0) return [];
-
-  const map = new Map();
-
-  for (let word of words) {
-    const count = map.has(word) ? map.get(word) : 0;
-    map.set(word, count + 1);
-  }
-
-  const heap = new MinHeap(k + 1);
-
-  for (let item of map.entries()) {
-    heap.push(item);
-
-    if (heap.n > k) {
-      heap.pop();
-    }
-  }
-
-  const res = [];
-
-  while (heap.n > 0 && res.length < k) {
-    res.push(heap.pop()[0]);
-  }
-
-  return res.reverse();
-};
