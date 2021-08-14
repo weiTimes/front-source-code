@@ -14,4 +14,8 @@ import './style.css';
 // import './src/topics/获取模块引用关系';
 // import './src/topics/地址字符串解析';
 // import './src/topics/js判断一个对象是数组的方式';
-import './src/basic/instanceof';
+// import './src/basic/instanceof';
+// import './src/basic/promise-all';
+// import './src/basic/promise-allsettled';
+
+import './src/topics/实现带刷新token的request';
