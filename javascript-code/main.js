@@ -17,5 +17,5 @@ import './style.css';
 // import './src/basic/instanceof';
 // import './src/basic/promise-all';
 // import './src/basic/promise-allsettled';
-
-import './src/topics/实现带刷新token的request';
+// import './src/topics/设计一种请求池，支持传入最大并发数';
+import './src/topics/移除dom树上的class属性';
