@@ -13,11 +13,18 @@ router.get('/', async (ctx) => {
 router.post('/user/info', async (ctx) => {
   ctx.body = {
     code: 10000,
-    message: '登陆过期',
+    message: 'ok',
     data: {
       name: 'ywhoo',
       sex: 'male',
     },
+  };
+});
+router.post('/roles', async (ctx) => {
+  ctx.body = {
+    code: 10000,
+    message: 'ok',
+    data: ['管理员', '普通用户'],
   };
 });
 

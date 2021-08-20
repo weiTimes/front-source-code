@@ -18,4 +18,25 @@ import './style.css';
 // import './src/basic/promise-all';
 // import './src/basic/promise-allsettled';
 // import './src/topics/设计一种请求池，支持传入最大并发数';
-import './src/topics/移除dom树上的class属性';
+// import './src/topics/移除dom树上的class属性';
+import './src/promise/promise-full';
+
+const prosimify = (fn) => {
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      fn(...args, (err, result) => {
+        if (err) return reject(err);
+
+        resolve(result);
+      });
+    });
+  };
+};
+
+const prosimifyAll = (target) => {
+  Reflect.ownKeys(target).forEach((value) => {
+    if (typeof target[value] === 'function') {
+      target[`${value}Async`] = prosimify(target[value]);
+    }
+  });
+};
